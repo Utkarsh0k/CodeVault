@@ -157,6 +157,17 @@ export default function Workspace() {
     }
   };
 
+  const handleUpdateMetadata = async (metadata) => {
+    if (!selectedSnippet) return;
+    const previousCategoryId = selectedSnippet.categoryId;
+    const updated = await editSnippet(selectedSnippet._id, metadata);
+    setSelectedSnippet(updated);
+
+    if (metadata.categoryId && metadata.categoryId !== previousCategoryId) {
+      await refreshCategories();
+    }
+  };
+
   return (
     <div className="app-shell">
       <TopBar />
@@ -191,7 +202,11 @@ export default function Workspace() {
           onDelete={() => setSnippetToDelete(selectedSnippet)}
         />
 
-        <MetadataPanel snippet={selectedSnippet} />
+        <MetadataPanel
+          snippet={selectedSnippet}
+          categories={categories}
+          onUpdateMetadata={handleUpdateMetadata}
+        />
       </div>
 
       {showCreateModal && (
