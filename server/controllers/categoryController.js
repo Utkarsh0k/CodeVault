@@ -26,15 +26,25 @@ export const getCategories = asyncHandler(async (req, res) => {
 
 // POST /api/categories   body: { name }
 export const createCategory = asyncHandler(async (req, res) => {
-  const category = await Category.create({ name: req.body.name });
+  const name = req.body.name?.trim();
+  if (!name) {
+    return res.status(400).json({ message: 'Category name is required' });
+  }
+
+  const category = await Category.create({ name });
   res.status(201).json({ ...category.toObject(), snippetCount: 0 });
 });
 
 // PUT /api/categories/:id   body: { name }
 export const updateCategory = asyncHandler(async (req, res) => {
+  const name = req.body.name?.trim();
+  if (!name) {
+    return res.status(400).json({ message: 'Category name is required' });
+  }
+
   const category = await Category.findByIdAndUpdate(
     req.params.id,
-    { name: req.body.name },
+    { name },
     { new: true, runValidators: true } // return the updated document; apply schema rules
   );
 

@@ -76,6 +76,13 @@ export const getSnippetById = asyncHandler(async (req, res) => {
 export const createSnippet = asyncHandler(async (req, res) => {
   const data = pickEditableFields(req.body);
 
+  if (!data.title || !String(data.title).trim()) {
+    return res.status(400).json({ message: 'Snippet title is required' });
+  }
+  if (!data.categoryId) {
+    return res.status(400).json({ message: 'Category is required' });
+  }
+
   const categoryError = await checkCategory(data.categoryId);
   if (categoryError) return res.status(400).json({ message: categoryError });
 
@@ -86,6 +93,10 @@ export const createSnippet = asyncHandler(async (req, res) => {
 // PUT /api/snippets/:id
 export const updateSnippet = asyncHandler(async (req, res) => {
   const data = pickEditableFields(req.body);
+
+  if (data.title !== undefined && (!data.title || !String(data.title).trim())) {
+    return res.status(400).json({ message: 'Snippet title cannot be empty' });
+  }
 
   if (data.categoryId !== undefined) {
     const categoryError = await checkCategory(data.categoryId);
@@ -125,15 +136,18 @@ export const addGNote = asyncHandler(async (req, res) => {
   if (!snippet) return res.status(404).json({ message: 'Snippet not found' });
 
   const { text, x, y, width } = req.body;
+  if (!text || !String(text).trim()) {
+    return res.status(400).json({ message: 'Note text is required' });
+  }
   if (typeof x !== 'number' || typeof y !== 'number') {
     return res.status(400).json({ message: 'Note x and y must be numbers' });
   }
 
-  const note = { id: crypto.randomUUID(), text, x, y };
+  const note = { id: crypto.randomUUID(), text: String(text).trim(), x, y };
   if (width !== undefined) note.width = width;
 
   snippet.gNotes.push(note);
-  await snippet.save(); // schema validation (empty text, etc.) runs here
+  await snippet.save();
 
   res.status(201).json(snippet.gNotes[snippet.gNotes.length - 1]);
 });
@@ -146,9 +160,17 @@ export const updateGNote = asyncHandler(async (req, res) => {
   const note = snippet.gNotes.find((n) => n.id === req.params.noteId);
   if (!note) return res.status(404).json({ message: 'Note not found' });
 
-  for (const field of ['text', 'x', 'y', 'width']) {
+  if (req.body.text !== undefined) {
+    const trimmed = String(req.body.text).trim();
+    if (!trimmed) {
+      return res.status(400).json({ message: 'Note text cannot be empty' });
+    }
+    note.text = trimmed;
+  }
+
+  for (const field of ['x', 'y', 'width']) {
     if (req.body[field] === undefined) continue;
-    if (field !== 'text' && typeof req.body[field] !== 'number') {
+    if (typeof req.body[field] !== 'number') {
       return res.status(400).json({ message: `Note ${field} must be a number` });
     }
     note[field] = req.body[field];

@@ -586,3 +586,36 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .gnote-textarea:focus {
   background: rgba(0, 0, 0, 0.2);
 }
+
+
+/* ---------- Phase 13: Error banner enhancements ---------- */
+.error-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  background: var(--danger-bg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffcccc;
+}
+
+.error-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.error-banner-icon {
+  font-size: 14px;
+}
+
+.error-dismiss-btn {
+  color: #ffffff;
+  opacity: 0.85;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.error-dismiss-btn:hover {
+  opacity: 1;
+}
