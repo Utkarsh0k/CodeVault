@@ -1,8 +1,10 @@
+import { useRef, useState } from 'react';
 import EmptyState from '../common/EmptyState.jsx';
 import CodeEditor from './CodeEditor.jsx';
+import GNotesOverlay from './GNotesOverlay.jsx';
 import { getLanguageLabel, getMonacoLanguage } from '../../utils/constants.js';
 
-// Phase 11: Main area with interactive Favorite toggle button, Monaco Editor, and actions.
+// Phase 12: Main area with Monaco Editor, GNotes overlay, and GNotes controls.
 export default function MainArea({
   snippet,
   codeDraft,
@@ -12,7 +14,13 @@ export default function MainArea({
   saving,
   onDelete,
   onToggleFavorite,
+  onAddGNote,
+  onUpdateGNote,
+  onDeleteGNote,
 }) {
+  const [gNotesVisible, setGNotesVisible] = useState(true);
+  const containerRef = useRef(null);
+
   if (!snippet) {
     return (
       <main className="main-area">
@@ -25,13 +33,14 @@ export default function MainArea({
   }
 
   const monacoLanguage = getMonacoLanguage(snippet.language);
+  const notesCount = snippet.gNotes?.length || 0;
 
   return (
     <main className="main-area">
       <div className="main-header">
         <h1 className="snippet-title">{snippet.title}</h1>
         <span className="badge">{getLanguageLabel(snippet.language)}</span>
-        
+
         <button
           type="button"
           className={`favorite-btn ${snippet.favorite ? 'active' : ''}`}
@@ -48,6 +57,25 @@ export default function MainArea({
               <span className="unsaved-dot" /> Unsaved
             </span>
           )}
+
+          <button
+            type="button"
+            className="btn btn-sm"
+            onClick={onAddGNote}
+            title="Attach a new visual note over the code"
+          >
+            + Note
+          </button>
+
+          <button
+            type="button"
+            className={`btn btn-sm ${gNotesVisible ? 'btn-active-toggle' : ''}`}
+            onClick={() => setGNotesVisible((v) => !v)}
+            title="Toggle visual notes visibility"
+          >
+            Notes: {gNotesVisible ? `ON (${notesCount})` : 'OFF'}
+          </button>
+
           <button
             className="btn btn-primary btn-sm"
             onClick={onSave}
@@ -56,6 +84,7 @@ export default function MainArea({
           >
             {saving ? 'Saving...' : 'Save'}
           </button>
+
           <button
             className="btn btn-danger btn-sm"
             onClick={onDelete}
@@ -66,13 +95,22 @@ export default function MainArea({
         </div>
       </div>
 
-      <div className="editor-container">
+      <div className="editor-container" ref={containerRef}>
         <CodeEditor
           code={codeDraft}
           language={monacoLanguage}
           onChange={onCodeChange}
           onSave={isDirty && !saving ? onSave : undefined}
         />
+
+        {gNotesVisible && (
+          <GNotesOverlay
+            gNotes={snippet.gNotes || []}
+            containerRef={containerRef}
+            onUpdateNote={onUpdateGNote}
+            onDeleteNote={onDeleteGNote}
+          />
+        )}
       </div>
     </main>
   );

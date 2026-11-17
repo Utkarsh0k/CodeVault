@@ -41,3 +41,25 @@ export const deleteSnippet = (id) =>
   request(`/snippets/${id}`, {
     method: 'DELETE',
   });
+
+// ---------- GNOTES (embedded in snippet) ----------
+
+// POST /api/snippets/:id/gnotes
+export const addGNote = (snippetId, noteData) =>
+  request(`/snippets/${snippetId}/gnotes`, {
+    method: 'POST',
+    body: JSON.stringify(noteData),
+  });
+
+// PATCH /api/snippets/:id/gnotes/:noteId
+export const updateGNote = (snippetId, noteId, updates) =>
+  request(`/snippets/${snippetId}/gnotes/${noteId}`, {
+    method: 'PATCH',
+    body: JSON.stringify(updates),
+  });
+
+// DELETE /api/snippets/:id/gnotes/:noteId
+export const deleteGNote = (snippetId, noteId) =>
+  request(`/snippets/${snippetId}/gnotes/${noteId}`, {
+    method: 'DELETE',
+  });

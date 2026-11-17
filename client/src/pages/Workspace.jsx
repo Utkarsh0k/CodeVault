@@ -9,7 +9,12 @@ import ConfirmDialog from '../components/common/ConfirmDialog.jsx';
 import CreateSnippetModal from '../components/layout/CreateSnippetModal.jsx';
 import useCategories from '../hooks/useCategories.js';
 import useSnippets from '../hooks/useSnippets.js';
-import { getSnippet } from '../services/snippetService.js';
+import {
+  getSnippet,
+  addGNote,
+  updateGNote,
+  deleteGNote,
+} from '../services/snippetService.js';
 
 export default function Workspace() {
   const [error, setError] = useState('');
@@ -203,6 +208,54 @@ export default function Workspace() {
     }
   };
 
+  // ----- GNotes actions -----
+  const handleAddGNote = async () => {
+    if (!selectedSnippet) return;
+    try {
+      const existingNotes = selectedSnippet.gNotes || [];
+      const offset = (existingNotes.length % 5) * 25;
+      const initialNote = {
+        text: 'New note',
+        x: 60 + offset,
+        y: 60 + offset,
+      };
+
+      const createdNote = await addGNote(selectedSnippet._id, initialNote);
+      setSelectedSnippet((prev) => ({
+        ...prev,
+        gNotes: [...(prev.gNotes || []), createdNote],
+      }));
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const handleUpdateGNote = async (noteId, updates) => {
+    if (!selectedSnippet) return;
+    try {
+      const updatedNote = await updateGNote(selectedSnippet._id, noteId, updates);
+      setSelectedSnippet((prev) => ({
+        ...prev,
+        gNotes: (prev.gNotes || []).map((n) => (n.id === noteId ? updatedNote : n)),
+      }));
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const handleDeleteGNote = async (noteId) => {
+    if (!selectedSnippet) return;
+    try {
+      await deleteGNote(selectedSnippet._id, noteId);
+      setSelectedSnippet((prev) => ({
+        ...prev,
+        gNotes: (prev.gNotes || []).filter((n) => n.id !== noteId),
+      }));
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   return (
     <div className="app-shell">
       <TopBar
@@ -247,6 +300,9 @@ export default function Workspace() {
           saving={savingCode}
           onDelete={() => setSnippetToDelete(selectedSnippet)}
           onToggleFavorite={handleToggleFavorite}
+          onAddGNote={handleAddGNote}
+          onUpdateGNote={handleUpdateGNote}
+          onDeleteGNote={handleDeleteGNote}
         />
 
         <MetadataPanel

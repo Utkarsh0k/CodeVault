@@ -485,3 +485,104 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .snippet-star-btn.active {
   color: var(--star);
 }
+
+
+/* ---------- Phase 12: GNotes visual overlay & card styles ---------- */
+.btn-active-toggle {
+  background: var(--selected);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.gnotes-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none; /* Allows clicks in empty space to reach Monaco Editor */
+  z-index: 10;
+  overflow: hidden;
+}
+
+.gnote-card {
+  position: absolute;
+  pointer-events: auto; /* Captures mouse events on the note itself */
+  background: rgba(37, 37, 38, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.gnote-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+}
+
+.gnote-card.is-dragging {
+  opacity: 0.92;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+  border-color: var(--accent);
+  cursor: grabbing;
+}
+
+.gnote-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px 6px 0 0;
+  cursor: grab;
+}
+
+.gnote-header:active {
+  cursor: grabbing;
+}
+
+.gnote-drag-handle {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+.gnote-close-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 0 4px;
+  font-size: 14px;
+  line-height: 1;
+  border-radius: 3px;
+}
+
+.gnote-close-btn:hover {
+  color: #ff8a8a;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.gnote-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px;
+  background: transparent;
+  color: var(--text);
+  border: none;
+  resize: vertical;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.4;
+  outline: none;
+  user-select: text;
+  min-height: 50px;
+}
+
+.gnote-textarea:focus {
+  background: rgba(0, 0, 0, 0.2);
+}
