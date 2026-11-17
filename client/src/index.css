@@ -171,3 +171,86 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 /* ---------- empty states ---------- */
 .empty-state { padding: 24px 16px; text-align: center; }
 .empty-title { margin: 0 0 4px; font-weight: 600; }
+/* ---------- buttons and form fields ---------- */
+:root { --danger: #c0392b; }
+
+.btn {
+  padding: 6px 14px;
+  background: var(--selected);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.btn:hover:not(:disabled) { border-color: var(--muted); }
+.btn:disabled { opacity: 0.5; cursor: default; }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: #0b1a2b; font-weight: 600; }
+.btn-danger { background: var(--danger); border-color: var(--danger); color: #fff; }
+
+.text-input {
+  width: 100%;
+  padding: 7px 9px;
+  font: inherit;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.text-input:focus-visible { outline: 2px solid var(--accent); outline-offset: -1px; }
+.form-error { margin: 8px 0 0; color: #ff8a8a; font-size: 13px; }
+
+/* ---------- modal ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+}
+.modal {
+  width: 380px;
+  max-width: calc(100vw - 32px);
+  padding: 18px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.modal-title { margin: 0 0 12px; font-size: 16px; }
+.modal p { margin: 0; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+
+/* ---------- sidebar category rows ---------- */
+.sidebar-row { position: relative; }
+.row-actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: none; /* shown on hover or keyboard focus */
+  align-items: center;
+  gap: 2px;
+  padding-right: 8px;
+  background: var(--selected);
+}
+.sidebar-row:hover .row-actions,
+.sidebar-row:focus-within .row-actions { display: flex; }
+.icon-button {
+  padding: 2px 7px;
+  background: none;
+  border: none;
+  border-radius: 3px;
+  color: var(--muted);
+}
+.icon-button:hover { color: var(--text); background: var(--border); }
+
+.add-category {
+  display: block;
+  width: calc(100% - 28px);
+  margin: 8px 14px 14px;
+  padding: 6px;
+  background: none;
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+  color: var(--muted);
+}
+.add-category:hover { color: var(--text); border-color: var(--muted); }
