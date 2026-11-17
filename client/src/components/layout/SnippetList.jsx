@@ -1,15 +1,42 @@
 import EmptyState from '../common/EmptyState.jsx';
 import { getLanguageLabel } from '../../utils/constants.js';
 
-// Props: snippets (light list items), selectedId, onSelect(id), loading.
-export default function SnippetList({ snippets, selectedId, onSelect, loading }) {
+// Props: snippets, selectedId, onSelect(id), loading, onNewSnippet, categoriesCount.
+export default function SnippetList({
+  snippets,
+  selectedId,
+  onSelect,
+  loading,
+  onNewSnippet,
+  categoriesCount = 0,
+}) {
   return (
     <section className="snippet-list">
-      <h2 className="panel-title">Snippets ({snippets.length})</h2>
+      <div className="panel-header">
+        <h2 className="panel-title">Snippets ({snippets.length})</h2>
+        <button
+          className="btn btn-sm"
+          title="Create new snippet"
+          onClick={onNewSnippet}
+          disabled={categoriesCount === 0}
+        >
+          + New
+        </button>
+      </div>
 
       {loading && snippets.length === 0 && <p className="muted pad">Loading...</p>}
+
       {!loading && snippets.length === 0 && (
-        <EmptyState message="No snippets in this category." />
+        <EmptyState
+          message="No snippets in this view."
+          action={
+            categoriesCount > 0 ? (
+              <button className="btn btn-primary btn-sm" onClick={onNewSnippet}>
+                + Create Snippet
+              </button>
+            ) : null
+          }
+        />
       )}
 
       <ul className="plain-list">

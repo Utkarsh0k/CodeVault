@@ -15,3 +15,23 @@ export function getSnippets(filters = {}) {
 
 // GET /api/snippets/:id → the full snippet (with code and gNotes)
 export const getSnippet = (id) => request(`/snippets/${id}`);
+
+// POST /api/snippets
+export const createSnippet = (data) =>
+  request('/snippets', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+
+// PUT /api/snippets/:id
+export const updateSnippet = (id, data) =>
+  request(`/snippets/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
+
+// DELETE /api/snippets/:id
+export const deleteSnippet = (id) =>
+  request(`/snippets/${id}`, {
+    method: 'DELETE',
+  });
