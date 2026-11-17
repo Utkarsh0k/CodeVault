@@ -36,8 +36,9 @@ export default function TopBar({
   return (
     <header className="topbar">
       <div className="topbar-brand-group">
+        <span className="brand-logo" aria-hidden="true">⟨/⟩</span>
         <span className="brand">CodeVault</span>
-        <span className="muted small">Personal code snippet vault</span>
+        <span className="muted small brand-tagline">Personal code snippet vault</span>
       </div>
 
       <div className="topbar-controls">
@@ -52,6 +53,7 @@ export default function TopBar({
           />
           {localSearch && (
             <button
+              type="button"
               className="search-clear-btn"
               onClick={() => {
                 setLocalSearch('');
@@ -95,7 +97,8 @@ export default function TopBar({
 
         {hasActiveFilters && (
           <button
-            className="btn btn-sm"
+            type="button"
+            className="btn btn-sm btn-reset-filters"
             onClick={onResetFilters}
             title="Reset search and filters"
           >

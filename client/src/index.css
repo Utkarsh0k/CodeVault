@@ -619,3 +619,154 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .error-dismiss-btn:hover {
   opacity: 1;
 }
+
+
+/* ---------- Phase 14: UI Refinement & Polish ---------- */
+
+/* Custom Dark Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+/* Brand Logo */
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Consolas, monospace;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--accent);
+  background: rgba(79, 163, 255, 0.12);
+  border: 1px solid rgba(79, 163, 255, 0.25);
+  border-radius: 4px;
+  padding: 2px 6px;
+  letter-spacing: -0.05em;
+}
+
+.brand-tagline {
+  display: inline-block;
+}
+
+@media (max-width: 900px) {
+  .brand-tagline {
+    display: none;
+  }
+}
+
+/* Buttons Polish */
+.btn-primary-outline {
+  background: transparent;
+  border-color: rgba(79, 163, 255, 0.4);
+  color: var(--accent);
+}
+
+.btn-primary-outline:hover {
+  background: rgba(79, 163, 255, 0.12);
+  border-color: var(--accent);
+}
+
+.btn-reset-filters {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Difficulty Badges */
+.badge-diff {
+  display: inline-block;
+  padding: 1px 7px;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  line-height: 1.3;
+}
+
+.badge-diff-easy {
+  color: #5cdb7b;
+  background: rgba(92, 219, 123, 0.1);
+  border-color: rgba(92, 219, 123, 0.25);
+}
+
+.badge-diff-medium {
+  color: #ffaa33;
+  background: rgba(255, 170, 51, 0.1);
+  border-color: rgba(255, 170, 51, 0.25);
+}
+
+.badge-diff-hard {
+  color: #ff5c5c;
+  background: rgba(255, 92, 92, 0.1);
+  border-color: rgba(255, 92, 92, 0.25);
+}
+
+.badge-lang {
+  background: rgba(255, 255, 255, 0.06);
+  font-family: Consolas, monospace;
+}
+
+/* Snippet List Refinements */
+.snippet-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.snippet-complexity {
+  font-family: Consolas, monospace;
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.loader-text {
+  padding: 16px 14px;
+}
+
+/* Empty State Polish */
+.empty-state-icon {
+  font-size: 26px;
+  margin-bottom: 6px;
+  opacity: 0.8;
+}
+
+.empty-message {
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Main Area Header Polish */
+.main-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+.main-header-left .snippet-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.unsaved-indicator {
+  display: inline-flex;
+  align-items: center;
+}
