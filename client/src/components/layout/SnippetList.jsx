@@ -1,7 +1,7 @@
 import EmptyState from '../common/EmptyState.jsx';
 import { getLanguageLabel } from '../../utils/constants.js';
 
-// Props: snippets, selectedId, onSelect(id), loading, onNewSnippet, categoriesCount.
+// Props: snippets, selectedId, onSelect(id), loading, onNewSnippet, categoriesCount, isFiltered, onResetFilters
 export default function SnippetList({
   snippets,
   selectedId,
@@ -9,6 +9,8 @@ export default function SnippetList({
   loading,
   onNewSnippet,
   categoriesCount = 0,
+  isFiltered = false,
+  onResetFilters,
 }) {
   return (
     <section className="snippet-list">
@@ -27,16 +29,28 @@ export default function SnippetList({
       {loading && snippets.length === 0 && <p className="muted pad">Loading...</p>}
 
       {!loading && snippets.length === 0 && (
-        <EmptyState
-          message="No snippets in this view."
-          action={
-            categoriesCount > 0 ? (
-              <button className="btn btn-primary btn-sm" onClick={onNewSnippet}>
-                + Create Snippet
+        isFiltered ? (
+          <EmptyState
+            title="No snippets match"
+            message="No snippets match your search or filter criteria."
+            action={
+              <button className="btn btn-sm" onClick={onResetFilters}>
+                Clear Search & Filters
               </button>
-            ) : null
-          }
-        />
+            }
+          />
+        ) : (
+          <EmptyState
+            message="No snippets in this view."
+            action={
+              categoriesCount > 0 ? (
+                <button className="btn btn-primary btn-sm" onClick={onNewSnippet}>
+                  + Create Snippet
+                </button>
+              ) : null
+            }
+          />
+        )
       )}
 
       <ul className="plain-list">

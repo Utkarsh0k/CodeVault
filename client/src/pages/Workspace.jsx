@@ -11,13 +11,6 @@ import useCategories from '../hooks/useCategories.js';
 import useSnippets from '../hooks/useSnippets.js';
 import { getSnippet } from '../services/snippetService.js';
 
-// Translates the selected sidebar view into the filters the API understands.
-function filtersForView(view) {
-  if (view === 'all') return {};
-  if (view === 'favorites') return { favorite: 'true' };
-  return { categoryId: view }; // anything else is a category _id
-}
-
 export default function Workspace() {
   const [error, setError] = useState('');
   const {
@@ -29,8 +22,38 @@ export default function Workspace() {
   } = useCategories(setError);
 
   const [selectedView, setSelectedView] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState('');
+  const [selectedDifficulty, setSelectedDifficulty] = useState('');
 
-  const filters = useMemo(() => filtersForView(selectedView), [selectedView]);
+  const isFiltered = Boolean(searchQuery || selectedLanguage || selectedDifficulty);
+
+  const handleResetFilters = () => {
+    setSearchQuery('');
+    setSelectedLanguage('');
+    setSelectedDifficulty('');
+  };
+
+  // Assembles filters for the backend query: category / view + search + language + difficulty
+  const filters = useMemo(() => {
+    const f = {};
+    if (selectedView === 'favorites') {
+      f.favorite = 'true';
+    } else if (selectedView !== 'all') {
+      f.categoryId = selectedView;
+    }
+    if (searchQuery.trim()) {
+      f.q = searchQuery.trim();
+    }
+    if (selectedLanguage) {
+      f.language = selectedLanguage;
+    }
+    if (selectedDifficulty) {
+      f.difficulty = selectedDifficulty;
+    }
+    return f;
+  }, [selectedView, searchQuery, selectedLanguage, selectedDifficulty]);
+
   const {
     snippets,
     loading: loadingList,
@@ -170,7 +193,15 @@ export default function Workspace() {
 
   return (
     <div className="app-shell">
-      <TopBar />
+      <TopBar
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        selectedLanguage={selectedLanguage}
+        onLanguageChange={setSelectedLanguage}
+        selectedDifficulty={selectedDifficulty}
+        onDifficultyChange={setSelectedDifficulty}
+        onResetFilters={handleResetFilters}
+      />
       {error && <ErrorBanner message={error} onDismiss={() => setError('')} />}
 
       <div className="workspace">
@@ -190,6 +221,8 @@ export default function Workspace() {
           loading={loadingList}
           onNewSnippet={() => setShowCreateModal(true)}
           categoriesCount={categories.length}
+          isFiltered={isFiltered}
+          onResetFilters={handleResetFilters}
         />
 
         <MainArea
