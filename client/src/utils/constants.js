@@ -17,3 +17,7 @@ export const DIFFICULTIES = ['Easy', 'Medium', 'Hard'];
 export function getLanguageLabel(value) {
   return LANGUAGES.find((lang) => lang.value === value)?.label || value;
 }
+
+export function getMonacoLanguage(value) {
+  return LANGUAGES.find((lang) => lang.value === value)?.monaco || 'plaintext';
+}

@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
 import EmptyState from '../common/EmptyState.jsx';
-import { getLanguageLabel } from '../../utils/constants.js';
+import CodeEditor from './CodeEditor.jsx';
+import { getLanguageLabel, getMonacoLanguage } from '../../utils/constants.js';
 
-// Phase 7: Editable code area with Save (and unsaved warning indicator) and Delete.
-// Phase 8 replaces the <textarea> with Monaco Editor.
+// Phase 8: Main area with Monaco Editor integration.
+// Supports syntax highlighting, VS Code dark theme, and Ctrl+S saving.
 export default function MainArea({
   snippet,
   codeDraft,
@@ -13,20 +13,6 @@ export default function MainArea({
   saving,
   onDelete,
 }) {
-  // Support Ctrl+S / Cmd+S shortcut to save changes quickly
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-        e.preventDefault();
-        if (isDirty && !saving) {
-          onSave();
-        }
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isDirty, saving, onSave]);
-
   if (!snippet) {
     return (
       <main className="main-area">
@@ -37,6 +23,8 @@ export default function MainArea({
       </main>
     );
   }
+
+  const monacoLanguage = getMonacoLanguage(snippet.language);
 
   return (
     <main className="main-area">
@@ -69,13 +57,14 @@ export default function MainArea({
         </div>
       </div>
 
-      <textarea
-        className="code-editor-textarea"
-        value={codeDraft}
-        onChange={(e) => onCodeChange(e.target.value)}
-        placeholder="// Write or paste your code here..."
-        spellCheck="false"
-      />
+      <div className="editor-container">
+        <CodeEditor
+          code={codeDraft}
+          language={monacoLanguage}
+          onChange={onCodeChange}
+          onSave={isDirty && !saving ? onSave : undefined}
+        />
+      </div>
     </main>
   );
 }
