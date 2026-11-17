@@ -295,18 +295,6 @@ codevault/
 
 ---
 
-## Screenshots
-
-> Add screenshots of the application here after deployment.
-
-| Screen | Description |
-|--------|-------------|
-| ![Workspace](screenshots/workspace.png) | Main workspace with editor |
-| ![GNotes](screenshots/gnotes.png) | GNotes overlay on editor |
-| ![Search](screenshots/search.png) | Search and filter in action |
-
----
-
 ## Testing
 
 The project includes a comprehensive test plan with 12 test cases documented in [TESTING.md](TESTING.md).
