@@ -60,6 +60,7 @@ export default function Workspace() {
     refresh: refreshSnippets,
     addSnippet,
     editSnippet,
+    toggleFavorite,
     removeSnippet,
   } = useSnippets(filters, setError);
 
@@ -191,6 +192,17 @@ export default function Workspace() {
     }
   };
 
+  const handleToggleFavorite = async (id) => {
+    try {
+      const result = await toggleFavorite(id);
+      if (selectedSnippet && selectedSnippet._id === id) {
+        setSelectedSnippet((prev) => ({ ...prev, favorite: result.favorite }));
+      }
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   return (
     <div className="app-shell">
       <TopBar
@@ -223,6 +235,7 @@ export default function Workspace() {
           categoriesCount={categories.length}
           isFiltered={isFiltered}
           onResetFilters={handleResetFilters}
+          onToggleFavorite={handleToggleFavorite}
         />
 
         <MainArea
@@ -233,6 +246,7 @@ export default function Workspace() {
           onSave={handleSaveCode}
           saving={savingCode}
           onDelete={() => setSnippetToDelete(selectedSnippet)}
+          onToggleFavorite={handleToggleFavorite}
         />
 
         <MetadataPanel

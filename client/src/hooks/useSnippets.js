@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import * as snippetService from '../services/snippetService.js';
 
 // Manages the snippet list based on the active filters.
-// Provides CRUD operations that keep the list synchronized.
+// Provides CRUD operations and favorite toggling that keep the list synchronized.
 export default function useSnippets(filters, onError) {
   const [snippets, setSnippets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -38,6 +38,17 @@ export default function useSnippets(filters, onError) {
     return updated;
   };
 
+  const toggleFavorite = async (id) => {
+    const result = await snippetService.toggleFavorite(id);
+    // Instant optimistic update in the current list
+    setSnippets((prev) =>
+      prev.map((s) => (s._id === id ? { ...s, favorite: result.favorite } : s))
+    );
+    // Refresh to respect active filters (e.g. if viewing "Favorites")
+    await refresh();
+    return result;
+  };
+
   const removeSnippet = async (id) => {
     const result = await snippetService.deleteSnippet(id);
     await refresh();
@@ -50,6 +61,7 @@ export default function useSnippets(filters, onError) {
     refresh,
     addSnippet,
     editSnippet,
+    toggleFavorite,
     removeSnippet,
   };
 }

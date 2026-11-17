@@ -1,6 +1,6 @@
 import { request } from './api.js';
 
-// filters example: { categoryId: '...', favorite: 'true' }
+// filters example: { categoryId: '...', favorite: 'true', q: '...', language: '...', difficulty: '...' }
 // Empty values are skipped, so only real filters reach the URL.
 export function getSnippets(filters = {}) {
   const params = new URLSearchParams();
@@ -28,6 +28,12 @@ export const updateSnippet = (id, data) =>
   request(`/snippets/${id}`, {
     method: 'PUT',
     body: JSON.stringify(data),
+  });
+
+// PATCH /api/snippets/:id/favorite → toggles favorite status { _id, favorite }
+export const toggleFavorite = (id) =>
+  request(`/snippets/${id}/favorite`, {
+    method: 'PATCH',
   });
 
 // DELETE /api/snippets/:id

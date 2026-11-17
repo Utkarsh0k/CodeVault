@@ -1,7 +1,7 @@
 import EmptyState from '../common/EmptyState.jsx';
 import { getLanguageLabel } from '../../utils/constants.js';
 
-// Props: snippets, selectedId, onSelect(id), loading, onNewSnippet, categoriesCount, isFiltered, onResetFilters
+// Props: snippets, selectedId, onSelect(id), loading, onNewSnippet, categoriesCount, isFiltered, onResetFilters, onToggleFavorite
 export default function SnippetList({
   snippets,
   selectedId,
@@ -11,6 +11,7 @@ export default function SnippetList({
   categoriesCount = 0,
   isFiltered = false,
   onResetFilters,
+  onToggleFavorite,
 }) {
   return (
     <section className="snippet-list">
@@ -60,19 +61,38 @@ export default function SnippetList({
             .join(' · ');
           return (
             <li key={snippet._id}>
-              <button
+              <div
                 className={`snippet-item ${snippet._id === selectedId ? 'active' : ''}`}
                 onClick={() => onSelect(snippet._id)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onSelect(snippet._id);
+                  }
+                }}
               >
-                <span className="snippet-item-title">
-                  {snippet.title}
-                  {snippet.favorite && <span className="star" title="Favorite"> ★</span>}
-                </span>
+                <div className="snippet-item-header">
+                  <span className="snippet-item-title">{snippet.title}</span>
+                  <button
+                    type="button"
+                    className={`snippet-star-btn ${snippet.favorite ? 'active' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onToggleFavorite(snippet._id);
+                    }}
+                    title={snippet.favorite ? 'Remove from favorites' : 'Mark as favorite'}
+                    aria-label={snippet.favorite ? 'Remove from favorites' : 'Mark as favorite'}
+                  >
+                    {snippet.favorite ? '★' : '☆'}
+                  </button>
+                </div>
                 <span className="muted small">{meta}</span>
                 {snippet.timeComplexity && (
                   <span className="muted small">{snippet.timeComplexity}</span>
                 )}
-              </button>
+              </div>
             </li>
           );
         })}
